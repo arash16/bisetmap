@@ -1,9 +1,9 @@
 [package]
 license = "MIT"
 name = "bisetmap"
-version = "0.1.0"
+version = "0.1.1"
 readme = "README.md"
-description = "A fast two-way bijective map implementation"
+description = "A fast thread-safe two-way hash map of sets"
 authors = ["Arash Shakery <arash.shakery@gmail.com> (arash16.com)"]
 keywords = ["bidirectional", "two-way", "map", "hashmap", "multimap"]
 categories = ["data-structures", "algorithms"]
