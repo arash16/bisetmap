@@ -56,7 +56,6 @@
 //!
 //! Duplicate key-value pairs are ignored and inserted only once
 //!
-//! https://doc.rust-lang.org/std/collections/index.html#insert-and-complex-keys
 //! [`HashMap`]: https://doc.rust-lang.org/std/collections/struct.HashMap.html
 
 use std::collections::{HashMap, HashSet};
