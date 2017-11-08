@@ -1,0 +1,16 @@
+[package]
+license = "MIT"
+name = "bisetmap"
+version = "0.1.0"
+readme = "README.md"
+description = "A fast two-way bijective map implementation"
+authors = ["Arash Shakery <arash.shakery@gmail.com> (arash16.com)"]
+keywords = ["bidirectional", "map", "container", "two-way", "hashmap", "set", "multimap"]
+categories = ["data-structures", "algorithms"]
+documentation = "https://docs.rs/bisetmap/"
+homepage = "https://github.com/arash16/bisetmap/"
+repository = "https://github.com/arasg16/bisetmap/"
+
+
+
+[dependencies]
