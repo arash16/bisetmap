@@ -9,8 +9,6 @@ keywords = ["bidirectional", "two-way", "map", "hashmap", "multimap"]
 categories = ["data-structures", "algorithms"]
 documentation = "https://docs.rs/bisetmap/"
 homepage = "https://github.com/arash16/bisetmap/"
-repository = "https://github.com/arasg16/bisetmap/"
-
-
+repository = "https://github.com/arash16/bisetmap/"
 
 [dependencies]
