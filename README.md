@@ -6,7 +6,7 @@ BisetMap is a fast and thread-safe two-way hash map of sets for Rust. It is best
 two collumns uniquely. Each key is associated to one or more other unique values.
 
 The structure is interior mutable and all operations are thread safe. Each clone provides access to the same
-underlying data.
+underlying data. Serialize and Deserialize from serde are also implemented.
 
 ## Usage
 To use BisetMap in your Rust project, add `bisetmap = 0.1` to the dependencies section of your `Cargo.toml`.

@@ -7,7 +7,7 @@
 //! exactly one value.
 //!
 //! The structure is interior mutable and all operations are thread safe. Each clone provides access
-//! to the same underlying data.
+//! to the same underlying data. Serialize and Deserialize from serde are also implemented.
 //!
 //! Internally, a `BisetMap` is composed of two `HashMap`s, one for the left-to-right direction and
 //! one for right-to-left. As such, the big-O performance of the `get`, `remove`, `insert`, and
@@ -62,10 +62,17 @@
 //!
 //! [`HashMap`]: https://doc.rust-lang.org/std/collections/struct.HashMap.html
 
+extern crate serde;
+
 use std::collections::{HashMap, HashSet};
+use std::marker::PhantomData;
 use std::sync::{Mutex, Arc};
 use std::hash::Hash;
 use std::fmt;
+
+use serde::de::{Deserialize, Deserializer, Visitor, MapAccess};
+use serde::ser::{Serialize, Serializer, SerializeMap};
+
 
 /// A two-way map between keys (left) and values (right).
 ///
@@ -373,7 +380,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
 		remove_items(h1, h2, &k)
 	}
 
-    /// Removes the specified key and all values associated with it.
+    /// Removes the specified value and all keys associated with it.
     ///
     /// Returns a vector of previous keys associated with given value.
     ///
@@ -469,6 +476,63 @@ impl<L: Eq+Hash+Clone+fmt::Debug, R: Eq+Hash+Clone+fmt::Debug> fmt::Debug for Bi
         Ok(())
     }
 }
+
+
+
+
+
+impl<L:Eq+Hash+Clone+Serialize, R:Eq+Hash+Clone+Serialize> Serialize for BisetMap<L, R> {
+    fn serialize<S:Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+    	let data = self.collect();
+        let mut map = serializer.serialize_map(Some(data.len()))?;
+        for (k, v) in data {
+            map.serialize_entry(&k, &v)?;
+        }
+        map.end()
+    }
+}
+
+
+struct BisetMapVisitor<L:Eq+Hash+Clone, R:Eq+Hash+Clone> {
+    marker: PhantomData<fn() -> BisetMap<L, R>>
+}
+
+impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMapVisitor<L, R> {
+    fn new() -> Self {
+        BisetMapVisitor {
+            marker: PhantomData
+        }
+    }
+}
+
+impl<'de, L:Eq+Hash+Clone+Deserialize<'de>, R:Eq+Hash+Clone+Deserialize<'de>> Visitor<'de> for BisetMapVisitor<L, R> {
+    type Value = BisetMap<L, R>;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        formatter.write_str("a biset map")
+    }
+
+    fn visit_map<M: MapAccess<'de>>(self, mut access: M) -> Result<Self::Value, M::Error> {
+        let bmap = BisetMap::with_capacity(access.size_hint().unwrap_or(0));
+        while let Some((key, values)) = access.next_entry::<L, Vec<R>>()? {
+        	for value in values {
+            	bmap.insert(key.clone(), value);
+            }
+        }
+        Ok(bmap)
+    }
+}
+
+impl<'de, L:Eq+Hash+Clone+Deserialize<'de>, R:Eq+Hash+Clone+Deserialize<'de>> Deserialize<'de> for BisetMap<L, R> {
+    fn deserialize<D:Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        deserializer.deserialize_map(BisetMapVisitor::new())
+    }
+}
+
+
+
+
+
 
 #[cfg(test)]
 mod tests {
