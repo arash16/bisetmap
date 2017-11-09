@@ -5,6 +5,9 @@
 //! right values and vice versa. Compare this to a [`HashMap`], where every key is associated with
 //! exactly one value.
 //!
+//! The structure is interior mutable and all operations are thread safe. Each clone provides access
+//! to the same underlying data.
+//!
 //! Internally, a `BisetMap` is composed of two `HashMap`s, one for the left-to-right direction and
 //! one for right-to-left. As such, the big-O performance of the `get`, `remove`, `insert`, and
 //! `contains` methods are the same as those of a `HashMap`.
@@ -63,7 +66,7 @@ use std::sync::{Mutex, Arc};
 use std::hash::Hash;
 use std::fmt;
 
-/// A two-way map between left values and right values.
+/// A two-way map between keys (left) and values (right).
 ///
 /// See the [module-level documentation] for more details and examples.
 ///
@@ -137,7 +140,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
         }
 	}
 
-    /// Removes all left-right pairs from the `BisetMap`, but keeps the allocated memory for reuse.
+    /// Removes all key-value pairs from the `BisetMap`, but keeps the allocated memory for reuse.
     ///
     /// # Examples
     ///
@@ -316,7 +319,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
 		self.hh.lock().unwrap().1.contains_key(v)
 	}
 
-    /// Returns a vector of right values corresponding to the given left value.
+    /// Returns a vector of values (right) corresponding to the given key (left).
     ///
     /// # Examples
     ///
@@ -332,7 +335,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
 		get_item(&self.hh.lock().unwrap().0, &k)
 	}
 
-    /// Returns a vector of left values corresponding to the given right value.
+    /// Returns a vector of keys (left) corresponding to the given value (right).
     ///
     /// # Examples
     ///
@@ -350,8 +353,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
 
     /// Removes the specified key and all values associated with it.
     ///
-    /// Returns the previous left-right pair if the map contained the left value and `None`
-    /// otherwise.
+    /// Returns a vector of previous values associated with given key.
     ///
     /// # Examples
     ///
@@ -372,8 +374,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
 
     /// Removes the specified key and all values associated with it.
     ///
-    /// Returns the previous left-right pair if the map contained the left value and `None`
-    /// otherwise.
+    /// Returns a vector of previous keys associated with given value.
     ///
     /// # Examples
     ///
@@ -392,7 +393,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
 		remove_items(h2, h1, &v)
 	}
 
-    /// Returns the number of unique keys (left values).
+    /// Returns the number of unique keys (left).
     ///
     /// # Examples
     ///
@@ -410,7 +411,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
 		self.hh.lock().unwrap().0.len()
 	}
 
-    /// Returns the number of unique values (right values).
+    /// Returns the number of unique values (right).
     ///
     /// # Examples
     ///
@@ -428,7 +429,7 @@ impl<L:Eq+Hash+Clone, R:Eq+Hash+Clone> BisetMap<L, R> {
 		self.hh.lock().unwrap().1.len()
 	}
 
-    /// Returns `true` if the map contains no left-right pairs, and `false` otherwise.
+    /// Returns `true` if the map contains no key-value pairs, and `false` otherwise.
     ///
     /// # Examples
     ///
