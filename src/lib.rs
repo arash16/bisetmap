@@ -1,4 +1,5 @@
-//! A fast thread-safe two-way hash map of sets.
+//! A fast and thread-safe two-way hash map of sets. It is best suited where you need to associate
+//! two collumns uniquely. Each key is associated to one or more other unique values.
 //!
 //! A `BisetMap<L, R>` is a Multi-Hash-Map between values of type `L`, called left values, and values
 //! of type `R`, called right values. This means every left value is associated with one or more
