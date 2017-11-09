@@ -14,7 +14,7 @@ See [the docs](https://docs.rs/bisetmap/) for more details and example code.
 
 ## Examples
 
-```
+```rust
 use bisetmap::BisetMap;
 
 let subscriptions = BisetMap::new();
