@@ -1,7 +1,7 @@
 [![crates.io](https://img.shields.io/crates/v/bisetmap.svg)](https://crates.io/crates/bisetmap)
 [![Documentation](https://docs.rs/bisetmap/badge.svg)](https://docs.rs/bisetmap/)
 
-# bisetmap
+# BisetMap
 BisetMap is a fast and thread-safe two-way hash map of sets for Rust. It is best suited where you need to associate
 two collumns uniquely. Each key is associated to one or more other unique values.
 
@@ -9,7 +9,7 @@ The structure is interior mutable and all operations are thread safe. Each clone
 underlying data.
 
 ## Usage
-To use bisetmap in your Rust project, add `bisetmap = 0.1` to the dependencies section of your `Cargo.toml`.
+To use BisetMap in your Rust project, add `bisetmap = 0.1` to the dependencies section of your `Cargo.toml`.
 See [the docs](https://docs.rs/bisetmap/) for more details and example code.
 
 ## Examples
@@ -43,5 +43,5 @@ assert!(subscriptions.value_exists(&"Tech"));
 ```
 
 ## License
-bisetmap is licensed under the MIT license.
+BisetMap is licensed under the MIT license.
 
